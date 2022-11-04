@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, lazy, Suspense } from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Redirect,
+} from 'react-router-dom';
+import ProtectedRoute from './components/Authentication/ProtectedRoute';
 
-function App() {
+const Login = lazy(() => import('./pages/Login'));
+const Items = lazy(() => import('./pages/Items'));
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Router>
+        <Routes>
+          <Route exact path='/' element={<Login />} />
+          <Route path='/items' element={<ProtectedRoute Component={Items} />} />
+          {/* <Route exact path='/items' element={<Items />} /> */}
+        </Routes>
+      </Router>
     </div>
   );
-}
+};
 
 export default App;
