@@ -1,11 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledTableContainer = styled.div``;
+const StyledTableContainer = styled.div`
+  background-color: #f2f2f2;
+`;
 const StyledTable = styled.table`
   display: flex;
   flex-direction: column;
   text-align: left;
+  border-radius: 10px;
+  border: solid 0.5px #cccccc;
+
+  td {
+    padding: 8px;
+  }
 `;
 
 const StyledHead = styled.thead`
@@ -14,8 +22,16 @@ const StyledHead = styled.thead`
   tr {
     display: flex;
     width: 100%;
+    background-color: #e6e6e6;
+    padding: 8px 0;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
     th {
       flex: 1;
+      padding: 0 8px;
+      &:not(:last-of-type) {
+        border-right: 1px solid black;
+      }
     }
   }
 `;

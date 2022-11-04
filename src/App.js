@@ -6,6 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import ProtectedRoute from './components/Authentication/ProtectedRoute';
+import './App.css';
 
 const Login = lazy(() => import('./pages/Login'));
 const Items = lazy(() => import('./pages/Items'));
