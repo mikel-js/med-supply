@@ -27,8 +27,6 @@ const Items = () => {
 
   const dbUrl = 'https://db-med-supply.herokuapp.com';
   useEffect(() => {
-    const cook = Cookies.get();
-    console.log({ cook });
     const getItems = async () => {
       try {
         const res = await axios({

@@ -53,21 +53,24 @@ const AddItemModal = ({ closeModal }) => {
 
   const onInputChange = (e, propName) => {
     e.preventDefault();
-    const value = e.target.value;
+    let value = e.target.value;
+    if (propName === 'quantity' || propName === 'price') {
+      value = parseInt(value);
+      console.log({ value });
+    }
     const newInputProps = { ...itemProps, [propName]: value };
     setItemProps(newInputProps);
   };
 
   const onSubmit = async () => {
+    console.log({ itemProps });
+
     try {
-      const res = await axios(
-        {
-          method: 'post',
-          url: `${dbUrl}/items/add`,
-          body: itemProps,
-        },
-        { withCredentials: true }
-      );
+      const res = await axios({
+        method: 'post',
+        url: `${dbUrl}/items/add`,
+        data: itemProps,
+      });
       if (res) {
         closeModal();
       }

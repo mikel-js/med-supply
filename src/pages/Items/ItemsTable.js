@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const StyledTableContainer = styled.div`
   background-color: #f2f2f2;
@@ -53,7 +54,29 @@ const StyledBody = styled.tbody`
 `;
 
 const ItemsTable = ({ items }) => {
-  const tableHeadings = ['name', 'brand', 'category', 'quantity', 'price'];
+  const dbUrl = 'https://db-med-supply.herokuapp.com';
+
+  const tableHeadings = [
+    'name',
+    'brand',
+    'category',
+    'quantity',
+    'price',
+    'action',
+  ];
+  const onItemDelete = async (itemId) => {
+    try {
+      const res = await axios({
+        method: 'delete',
+        url: `${dbUrl}/items/delete/${itemId}`,
+      });
+      if (res) {
+        console.log('success');
+      }
+    } catch (e) {
+      console.error('Error', e);
+    }
+  };
   return (
     <StyledTableContainer>
       <StyledTable>
@@ -65,13 +88,17 @@ const ItemsTable = ({ items }) => {
           </tr>
         </StyledHead>
         <StyledBody>
-          {items?.map(({ name, brand, category, quantity, price }, i) => (
+          {items?.map(({ id, name, brand, category, quantity, price }, i) => (
             <tr key={i}>
               <td>{name}</td>
               <td>{brand}</td>
               <td>{category}</td>
               <td>{quantity}</td>
               <td>{price}</td>
+              <td>
+                <button>Update</button>
+                <button onClick={() => onItemDelete(id)}>Delete</button>
+              </td>
             </tr>
           ))}
         </StyledBody>
