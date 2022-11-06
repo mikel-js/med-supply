@@ -12,7 +12,7 @@ const defaultItemProps = {
   imageUrl: '#',
 };
 
-const StyledAddModal = styled.div`
+const StyledUpdateModal = styled.div`
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -37,20 +37,11 @@ const StyledModalContainer = styled.div`
   max-width: 50%;
   background-color: white;
   padding: 48px;
-
-  p {
-    margin-bottom: 4px;
-  }
 `;
 const StyledInputContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const StyledModalContainer2 = styled.div``;
-const StyledModalContainer3 = styled.div``;
-
-const StyledSubmit = styled.button``;
-
 const StyledImg = styled.img`
   cursor: pointer;
 `;
@@ -59,17 +50,20 @@ const StyledImgContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const AddItemModal = ({ closeModal }) => {
-  const [itemProps, setItemProps] = useState(defaultItemProps);
+const StyledSubmit = styled.button``;
+
+const UpdateItemModal = ({ item, closeModal }) => {
+  const [itemProps, setItemProps] = useState(item);
+  const { name, category, quantity, price, brand, imageUrl, id } = itemProps;
 
   const dbUrl = 'https://db-med-supply.herokuapp.com';
+  // const dbUrl = 'http://localhost:1000';
 
   const onInputChange = (e, propName) => {
     e.preventDefault();
     let value = e.target.value;
     if (propName === 'quantity' || propName === 'price') {
       value = parseInt(value);
-      console.log({ value });
     }
     const newInputProps = { ...itemProps, [propName]: value };
     setItemProps(newInputProps);
@@ -78,10 +72,11 @@ const AddItemModal = ({ closeModal }) => {
   const onSubmit = async () => {
     try {
       const res = await axios({
-        method: 'post',
-        url: `${dbUrl}/items/add`,
+        method: 'patch',
+        url: `${dbUrl}/items/${item.id}`,
         data: itemProps,
       });
+
       if (res) {
         closeModal();
       }
@@ -90,7 +85,7 @@ const AddItemModal = ({ closeModal }) => {
     }
   };
   return (
-    <StyledAddModal>
+    <StyledUpdateModal>
       <StyledModalContainer>
         <StyledImgContainer>
           <StyledImg
@@ -100,18 +95,23 @@ const AddItemModal = ({ closeModal }) => {
             onClick={closeModal}
           />
         </StyledImgContainer>
+
         <StyledInputContainer>
           <StyledLabel>Item Name</StyledLabel>
-          <StyledName onChange={(e) => onInputChange(e, 'name')} />
+          <StyledName value={name} onChange={(e) => onInputChange(e, 'name')} />
         </StyledInputContainer>
         <StyledInputContainer>
           <StyledLabel>Category</StyledLabel>
-          <StyledName onChange={(e) => onInputChange(e, 'category')} />
+          <StyledName
+            value={category}
+            onChange={(e) => onInputChange(e, 'category')}
+          />
         </StyledInputContainer>
         <StyledInputContainer>
           <StyledLabel>Quantity</StyledLabel>
           <StyledName
             type='number'
+            value={quantity}
             onChange={(e) => onInputChange(e, 'quantity')}
           />
         </StyledInputContainer>
@@ -119,21 +119,28 @@ const AddItemModal = ({ closeModal }) => {
           <StyledLabel>Price</StyledLabel>
           <StyledName
             type='number'
+            value={price}
             onChange={(e) => onInputChange(e, 'price')}
           />
         </StyledInputContainer>
         <StyledInputContainer>
           <StyledLabel>Brand</StyledLabel>
-          <StyledName onChange={(e) => onInputChange(e, 'brand')} />
+          <StyledName
+            value={brand}
+            onChange={(e) => onInputChange(e, 'brand')}
+          />
         </StyledInputContainer>
         <StyledInputContainer>
           <StyledLabel>Image URL</StyledLabel>
-          <StyledName onChange={(e) => onInputChange(e, 'imageUrl')} />
+          <StyledName
+            value={imageUrl}
+            onChange={(e) => onInputChange(e, 'imageUrl')}
+          />
         </StyledInputContainer>
-        <StyledSubmit onClick={onSubmit}>Add Item</StyledSubmit>
+        <StyledSubmit onClick={onSubmit}>Update Item</StyledSubmit>
       </StyledModalContainer>
-    </StyledAddModal>
+    </StyledUpdateModal>
   );
 };
 
-export default AddItemModal;
+export default UpdateItemModal;

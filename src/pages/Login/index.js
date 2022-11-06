@@ -25,7 +25,7 @@ const Login = () => {
         data: reqBody,
       });
       if (res) {
-        console.log('res', res.data.id);
+        console.log('res', res);
         localStorage.setItem('userId', res.data.id);
         navigate('/items');
       }
