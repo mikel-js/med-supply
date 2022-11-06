@@ -59,7 +59,7 @@ const StyledImgContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const AddItemModal = ({ closeModal }) => {
+const AddItemModal = ({ closeModal, getItems }) => {
   const [itemProps, setItemProps] = useState(defaultItemProps);
 
   const dbUrl = 'https://db-med-supply.herokuapp.com';
@@ -69,7 +69,6 @@ const AddItemModal = ({ closeModal }) => {
     let value = e.target.value;
     if (propName === 'quantity' || propName === 'price') {
       value = parseInt(value);
-      console.log({ value });
     }
     const newInputProps = { ...itemProps, [propName]: value };
     setItemProps(newInputProps);
@@ -84,6 +83,7 @@ const AddItemModal = ({ closeModal }) => {
       });
       if (res) {
         closeModal();
+        getItems();
       }
     } catch (e) {
       console.error('Error', e);

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import InfoSection from './InfoSection';
 import ItemsTable from './ItemsTable';
 import AddItemModal from './AddItemModal';
-import Cookies from 'js-cookie';
+import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 
 const StyledSection = styled.div`
   background-color: #f9f2ec;
@@ -21,33 +21,40 @@ const StyledContent = styled.div`
 const Items = () => {
   const [items, setItems] = useState(null);
   const [displayAddModal, setDisplayAddModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onModalOpen = () => setDisplayAddModal(true);
   const onModalClose = () => setDisplayAddModal(false);
 
   const dbUrl = 'https://db-med-supply.herokuapp.com';
-  useEffect(() => {
-    const getItems = async () => {
-      try {
-        const res = await axios({
-          method: 'get',
-          url: `${dbUrl}/items/all`,
-        });
-        if (res) {
-          setItems(res.data);
-        }
-      } catch (e) {
-        console.error('Error', e);
+  const getItems = async () => {
+    try {
+      setIsLoading(true);
+      const res = await axios({
+        method: 'get',
+        url: `${dbUrl}/items/all`,
+      });
+      if (res) {
+        setItems(res.data);
       }
-    };
+    } catch (e) {
+      console.error('Error', e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
     getItems();
   }, []);
   const itemCount = items?.length || 0;
   return (
     <StyledSection>
       <InfoSection itemCount={itemCount} onModalOpen={onModalOpen} />
-      <ItemsTable items={items} />
-      {displayAddModal && <AddItemModal closeModal={onModalClose} />}
+      <ItemsTable items={items} getItems={getItems} />
+      {displayAddModal && (
+        <AddItemModal closeModal={onModalClose} getItems={getItems} />
+      )}
+      {isLoading && <LoadingScreen />}
     </StyledSection>
   );
 };

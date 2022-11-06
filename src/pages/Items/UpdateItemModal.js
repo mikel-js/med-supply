@@ -52,7 +52,7 @@ const StyledImgContainer = styled.div`
 
 const StyledSubmit = styled.button``;
 
-const UpdateItemModal = ({ item, closeModal }) => {
+const UpdateItemModal = ({ item, closeModal, getItems }) => {
   const [itemProps, setItemProps] = useState(item);
   const { name, category, quantity, price, brand, imageUrl, id } = itemProps;
 
@@ -79,6 +79,7 @@ const UpdateItemModal = ({ item, closeModal }) => {
 
       if (res) {
         closeModal();
+        getItems();
       }
     } catch (e) {
       console.error('Error', e);

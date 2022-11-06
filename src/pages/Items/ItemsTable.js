@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import UpdateItemModal from './UpdateItemModal';
+import DeleteModal from './DeleteModal';
 
 const StyledTableContainer = styled.div`
   background-color: #f2f2f2;
@@ -54,9 +55,11 @@ const StyledBody = styled.tbody`
   }
 `;
 
-const ItemsTable = ({ items }) => {
+const ItemsTable = ({ items, getItems }) => {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const dbUrl = 'https://db-med-supply.herokuapp.com';
 
   const tableHeadings = [
@@ -67,26 +70,37 @@ const ItemsTable = ({ items }) => {
     'price',
     'action',
   ];
-  const onItemDelete = async (itemId) => {
+  const onItemDelete = (itemId) => {
+    setSelectedItemId(itemId);
+    setShowDeleteModal(true);
+  };
+
+  const onDeleteModalClose = () => {
+    setSelectedItemId(null);
+    setShowDeleteModal(false);
+  };
+
+  const onDeleteConfirm = async () => {
     try {
       const res = await axios({
         method: 'delete',
-        url: `${dbUrl}/items/delete/${itemId}`,
+        url: `${dbUrl}/items/delete/${selectedItemId}`,
       });
       if (res) {
-        console.log('success');
+        onDeleteModalClose();
+        getItems();
       }
     } catch (e) {
       console.error('Error', e);
     }
   };
 
-  const onModalOpen = (itemId) => {
+  const onUpdateModalOpen = (itemId) => {
     const foundItem = items.find((item) => item.id === itemId);
     setSelectedItem(foundItem);
     setShowUpdateModal(true);
   };
-  const onModalClose = () => setShowUpdateModal(false);
+  const onUpdateModalClose = () => setShowUpdateModal(false);
   return (
     <StyledTableContainer>
       <StyledTable>
@@ -106,7 +120,7 @@ const ItemsTable = ({ items }) => {
               <td>{quantity}</td>
               <td>{price}</td>
               <td>
-                <button onClick={() => onModalOpen(id)}>Update</button>
+                <button onClick={() => onUpdateModalOpen(id)}>Update</button>
                 <button onClick={() => onItemDelete(id)}>Delete</button>
               </td>
             </tr>
@@ -114,7 +128,17 @@ const ItemsTable = ({ items }) => {
         </StyledBody>
       </StyledTable>
       {showUpdateModal && (
-        <UpdateItemModal item={selectedItem} closeModal={onModalClose} />
+        <UpdateItemModal
+          item={selectedItem}
+          closeModal={onUpdateModalClose}
+          getItems={getItems}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteModal
+          confirmDelete={onDeleteConfirm}
+          closeDeleteModal={onDeleteModalClose}
+        />
       )}
     </StyledTableContainer>
   );
