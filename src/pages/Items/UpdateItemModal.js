@@ -3,15 +3,6 @@ import styled from 'styled-components';
 import axios from 'axios';
 import iconClose from '../../assets/icons/close.png';
 
-const defaultItemProps = {
-  name: '',
-  category: '',
-  quantity: 0,
-  price: 0,
-  brand: '',
-  imageUrl: '#',
-};
-
 const StyledUpdateModal = styled.div`
   position: fixed;
   z-index: 1000;
@@ -26,15 +17,15 @@ const StyledUpdateModal = styled.div`
   align-items: center;
 `;
 
-const StyledLabel = styled.p``;
+const StyledLabel = styled.p`
+  margin-bottom: 8px;
+`;
 const StyledName = styled.input``;
-const StyledName2 = styled.input``;
-const StyledName3 = styled.input``;
-const StyledName4 = styled.input``;
 
 const StyledModalContainer = styled.div`
   display: flex:
-  max-width: 50%;
+  flex-direction: column;
+  min-width: 30%;
   background-color: white;
   padding: 48px;
 `;
@@ -50,7 +41,16 @@ const StyledImgContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const StyledSubmit = styled.button``;
+const StyledSubmit = styled.button`
+  margin-top: 16px;
+  padding: 8px;
+  border-radius: 10px;
+  background: #e6ffe6;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border: none;
+  cursor: pointer;
+`;
 
 const UpdateItemModal = ({ item, closeModal, getItems }) => {
   const [itemProps, setItemProps] = useState(item);

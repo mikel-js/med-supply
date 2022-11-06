@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import UpdateItemModal from './UpdateItemModal';
 import DeleteModal from './DeleteModal';
+import iconBin from '../../assets/icons/trash-bin.png';
 
 const StyledTableContainer = styled.div`
   background-color: #f2f2f2;
@@ -51,7 +52,25 @@ const StyledBody = styled.tbody`
 
     td {
       flex: 1;
+      display: flex;
+      gap: 12px;
+      align-items: center;
     }
+  }
+`;
+
+const StyledAction = styled.td`
+  button {
+    background: #e6ffe6;
+    border: none;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+      rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  }
+  img,
+  button {
+    cursor: pointer;
   }
 `;
 
@@ -63,12 +82,12 @@ const ItemsTable = ({ items, getItems }) => {
   const dbUrl = 'https://db-med-supply.herokuapp.com';
 
   const tableHeadings = [
-    'name',
-    'brand',
-    'category',
-    'quantity',
-    'price',
-    'action',
+    'Name',
+    'Brand',
+    'Category',
+    'Quantity',
+    'Price',
+    'Action',
   ];
   const onItemDelete = (itemId) => {
     setSelectedItemId(itemId);
@@ -100,7 +119,9 @@ const ItemsTable = ({ items, getItems }) => {
     setSelectedItem(foundItem);
     setShowUpdateModal(true);
   };
+
   const onUpdateModalClose = () => setShowUpdateModal(false);
+
   return (
     <StyledTableContainer>
       <StyledTable>
@@ -119,10 +140,15 @@ const ItemsTable = ({ items, getItems }) => {
               <td>{category}</td>
               <td>{quantity}</td>
               <td>{price}</td>
-              <td>
+              <StyledAction>
                 <button onClick={() => onUpdateModalOpen(id)}>Update</button>
-                <button onClick={() => onItemDelete(id)}>Delete</button>
-              </td>
+                <img
+                  alt='delete'
+                  src={iconBin}
+                  width='40px'
+                  onClick={() => onItemDelete(id)}
+                />
+              </StyledAction>
             </tr>
           ))}
         </StyledBody>

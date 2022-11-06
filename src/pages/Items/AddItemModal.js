@@ -4,12 +4,12 @@ import axios from 'axios';
 import iconClose from '../../assets/icons/close.png';
 
 const defaultItemProps = {
-  name: '',
-  category: '',
-  quantity: 0,
-  price: 0,
-  brand: '',
-  imageUrl: '#',
+  name: null,
+  category: null,
+  quantity: null,
+  price: null,
+  brand: null,
+  imageUrl: null,
 };
 
 const StyledAddModal = styled.div`
@@ -27,14 +27,13 @@ const StyledAddModal = styled.div`
 `;
 
 const StyledLabel = styled.p``;
+
 const StyledName = styled.input``;
-const StyledName2 = styled.input``;
-const StyledName3 = styled.input``;
-const StyledName4 = styled.input``;
 
 const StyledModalContainer = styled.div`
   display: flex:
-  max-width: 50%;
+  flex-direction: column;
+  min-width: 30%;
   background-color: white;
   padding: 48px;
 
@@ -42,25 +41,39 @@ const StyledModalContainer = styled.div`
     margin-bottom: 4px;
   }
 `;
+
 const StyledInputContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const StyledModalContainer2 = styled.div``;
-const StyledModalContainer3 = styled.div``;
 
-const StyledSubmit = styled.button``;
+const StyledSubmit = styled.button`
+  margin-top: 16px;
+  padding: 8px;
+  border-radius: 10px;
+  background: #e6ffe6;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  border: none;
+  cursor: pointer;
+`;
 
 const StyledImg = styled.img`
   cursor: pointer;
 `;
+
 const StyledImgContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
 
+const StyledError = styled.p`
+  color: red;
+`;
+
 const AddItemModal = ({ closeModal, getItems }) => {
   const [itemProps, setItemProps] = useState(defaultItemProps);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const dbUrl = 'https://db-med-supply.herokuapp.com';
 
@@ -75,6 +88,16 @@ const AddItemModal = ({ closeModal, getItems }) => {
   };
 
   const onSubmit = async () => {
+    const itemHasNull = Object.keys(itemProps).some(
+      (key) => itemProps[key] === null
+    );
+    if (itemHasNull) {
+      setErrorMessage('All fields are required!');
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
+      return;
+    }
     try {
       const res = await axios({
         method: 'post',
@@ -131,6 +154,7 @@ const AddItemModal = ({ closeModal, getItems }) => {
           <StyledName onChange={(e) => onInputChange(e, 'imageUrl')} />
         </StyledInputContainer>
         <StyledSubmit onClick={onSubmit}>Add Item</StyledSubmit>
+        {errorMessage && <StyledError>{errorMessage}</StyledError>}
       </StyledModalContainer>
     </StyledAddModal>
   );

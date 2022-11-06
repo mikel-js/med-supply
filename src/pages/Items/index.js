@@ -5,6 +5,7 @@ import InfoSection from './InfoSection';
 import ItemsTable from './ItemsTable';
 import AddItemModal from './AddItemModal';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
+import Navigation from '../../components/Navigation';
 
 const StyledSection = styled.div`
   background-color: #f9f2ec;
@@ -49,6 +50,7 @@ const Items = () => {
   const itemCount = items?.length || 0;
   return (
     <StyledSection>
+      <Navigation />
       <InfoSection itemCount={itemCount} onModalOpen={onModalOpen} />
       <ItemsTable items={items} getItems={getItems} />
       {displayAddModal && (
